@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/farshaddavoudi/Blazor.PersianDatePicker/master/LICENSE)
 
-<img src="https://github.com/fericode/Blazor.PersianDatePicker/blob/master/screenshot.png">
+<img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/summary.png">
 
 #### ***What do I'm trying to achieve here?***
 
@@ -15,7 +15,7 @@ It's not the ultimate visualization we can get from k6, but by far better than t
 #### 2- Fix the issue of not knowing the error cause (due to status = 0 error) in k6 by adding custom metrics
 
 Sometimes we get a lot of `status_code=0` response from k6 specially when we do stress and spike tests. I've found there are another param in k6 named `error_code` which gives better understanding of what's happening. I created some custom metrics so they can be easier tracked. 
-<img src="https://github.com/fericode/Blazor.PersianDatePicker/blob/master/screenshot.png">
+<img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/custom-metrics.png">
 
 #### 3- Better analyzing the test result
 
@@ -45,16 +45,16 @@ stages: testScenario,
 
 **2- Specify RPM of real-world users for our app.**
 Average number of requests a real user makes per minute in our app. For example, if a user makes 10 requests in 5 minutes, that’s 2 RPM. We need to specify this for our app. For ATA app it’s not high as it’s not Instagram!
-<img src="https://github.com/fericode/Blazor.PersianDatePicker/blob/master/screenshot.png">
+<img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/real-user-rpm.png">
 
 **3- Run test in a real scenario. Real scenarios are long and cannot be less than 40 minutes.**
 It’s the tricky part. We want the success RPM (request per minute) rate on the peak phase and divide it on real users RPM to determine how many concurrent users can work simultaneously.
 
 > 💡 We only want to get the success requests in the peak phase as the test has other phases. It’s done by a trick in test script and first check if we’re in stress load phase (peak phase), then add the custom counter metrics (counterStressLoadSuccesses).
-<img src="https://github.com/fericode/Blazor.PersianDatePicker/blob/master/screenshot.png">
+<img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/tag-stress-load-phase.png">
 
 And at the end, show the result in summary:
-<img src="https://github.com/fericode/Blazor.PersianDatePicker/blob/master/screenshot.png">
+<img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/show-real-users-in-summary.png">
 
 
 ##### 5- Understand the necessity of set a graceful rate-limit on our app:
