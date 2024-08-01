@@ -6,18 +6,18 @@
 
 #### ***What do I'm trying to achieve here?***
 
-#### 1- Add k6 HTML-reporter instead of seeing plain text reslut in CLI for better observability and more elegant way of having results history
+### 1- Add k6 HTML-reporter instead of seeing plain text reslut in CLI for better observability and more elegant way of having results history
 
 It's not the ultimate visualization we can get from k6, but by far better than the CLI summary I believe. It can be more customized with HTML teawks according the needs. More advanced visualization for k6 can be done with sending data to FluxDB (or other similar tools) and visualize them in Grafana. We do not talk about that approach here as for most businesses this HTML-report suffice. 
 
 > #### 💡 No change or additional setup or flag or param in k6 standard CLI command is needed for this HTML-report to work. Just use the `performance-test.js` and it works out of the box, putting the result in same directory (`results.html`) which then can be saved anywhere easily (in browser and manually) to have test result history.
 
-#### 2- Fix the issue of not knowing the error cause (due to status = 0 error) in k6 by adding custom metrics
+### 2- Fix the issue of not knowing the error cause (due to status = 0 error) in k6 by adding custom metrics
 
 Sometimes we get a lot of `status_code=0` response from k6 specially when we do stress and spike tests. I've found there are another param in k6 named `error_code` which gives better understanding of what's happening. I created some custom metrics so they can be easier tracked. 
 <img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/custom-metrics.png">
 
-#### 3- Better analyzing the test result
+### 3- Better analyzing the test result
 
 The 5 top boxes in the result are very important:
 
@@ -27,7 +27,7 @@ The 5 top boxes in the result are very important:
 - **Failed Checks**: It’s to validate the HTTP response by asserting some conditions. The most important condition is 200 status code. The other can be for example the response time be less than 3 seconds (what’s the point of getting the 200 status code after 20 seconds?!) 
 - **Success Rate**: It's rate of _OK Responses_ based on _Total Requests_. Basically percentage of requests resulted to 2xx status code response (without any additional checks of response duration, etc).
 
-##### 4- Try to calculate the real world users our app under test can handle simultaniously
+### 4- Try to calculate the real world users our app under test can handle simultaniously
 It’s not easy to interpret VUs to real-world users. Real users interact with app which includes reading, thinking and processing information and making decisions.
 To more exact calculate we need:
 
@@ -57,7 +57,7 @@ And at the end, show the result in summary:
 <img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/show-real-users-in-summary.png">
 
 
-##### 5- Understand the necessity of set a graceful rate-limit on our app:
+### 5- Understand the necessity of set a graceful rate-limit on our app:
 A rate limit to limit each user call and total concurrent users so the system can work seamlessly. Otherwise, the app will stifle and won’t work. For example, the response time will change from 5s to 50s because the system will be overwhelmed. We have to dump some requests in order to server being able to continue working.
 
 #### Some Additional Notes:
@@ -75,5 +75,5 @@ A rate limit to limit each user call and total concurrent users so the system ca
 – Custom metrics is only shown if they have a value (non 0) on them. 
 
 
-## Special Thanks:
+#### Special Thanks:
   *This project is ported from [k6-reporter](https://github.com/benc-uk/k6-reporter) project with som customizations and optimizations for easy and effective use of k6. Therefore, I appreciate the great effort of Ben Coleman @benc-uk and all contributors of that project*
