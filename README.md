@@ -73,3 +73,7 @@ A rate limit to limit each user call and total concurrent users so the system ca
 – The OS (server) you’re testing there (e.g. your Windows) is also important. Check you CPU and RAM and network status during test so it does not be like 100% CPU, etc.
 
 – Custom metrics is only shown if they have a value (non 0) on them. 
+
+
+## Special Thanks:
+  *This project is ported from [k6-reporter](https://github.com/benc-uk/k6-reporter) project with som customizations and optimizations for easy and effective use of k6. Therefore, I appreciate the great effort of Ben Coleman @benc-uk and all contributors of that project*
