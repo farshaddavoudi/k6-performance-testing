@@ -1,6 +1,10 @@
+// ########## Set `usersCapacityCalcRef: true` for phases that you want to calculate the users capacity based on
+// ########## No `usersCapacityCalcRef`: true` means no calculation for users capacity.
+// ########## Multiple phases can be set by `usersCapacityCalcRef`: true`
+
 export let scenario_1min = [
   // Unreliable scenario. Just for quick test
-  { duration: "30s", target: 100 },
+  { duration: "30s", target: 10 },
   { duration: "3s", target: 0 },
 ];
 

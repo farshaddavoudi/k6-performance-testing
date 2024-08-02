@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/benc-uk/k6-reporter/main/assets/icon.png" type="image/png">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>K6 Load Test: 2024-07-31 20:34</title>
+    <title>K6 Test Result: Server x - 16 Replicas - Internal Net - 2000 VUs</title>
     <style>
       body {
         margin: 1rem;
@@ -103,11 +103,12 @@
       .row div {
         flex: 1 1;
         text-align: center;
-        margin-bottom: 0.5rem;
-      }
+        margin-top: 0;
+        }
       .bignum {
         position: relative;
-        font-size: min(6vw, 80px);
+        font-size: min(6vw, 60px);
+        font-weight: bold;
         z-index: 20;
       }
       table {
@@ -138,45 +139,68 @@
   <body>
     <h1>
       <svg style="vertical-align:middle" width="50" height="45" viewBox="0 0 50 45" fill="none" class="footer-module--logo--_lkxx"><path d="M31.968 34.681a2.007 2.007 0 002.011-2.003c0-1.106-.9-2.003-2.011-2.003a2.007 2.007 0 00-2.012 2.003c0 1.106.9 2.003 2.012 2.003z" fill="#7D64FF"></path><path d="M39.575 0L27.154 16.883 16.729 9.31 0 45h50L39.575 0zM23.663 37.17l-2.97-4.072v4.072h-2.751V22.038l2.75 1.989v7.66l3.659-5.014 2.086 1.51-3.071 4.21 3.486 4.776h-3.189v.001zm8.305.17c-2.586 0-4.681-2.088-4.681-4.662 0-1.025.332-1.972.896-2.743l4.695-6.435 2.086 1.51-2.239 3.07a4.667 4.667 0 013.924 4.6c0 2.572-2.095 4.66-4.681 4.66z" fill="#7D64FF"></path></svg> 
-      &nbsp; K6 Load Test: 2024-07-31 20:34
+      &nbsp; <span style="font-size:27px;margin-right:10px; word-spacing:-4px"><i>k6 Test Result:</i></span> Server x - 16 Replicas - Internal Net - 2000 VUs
     </h1>
 
-    <div class="row">
-      <div class="box">
-        <i class="fas fa-globe icon"></i>
-        <h4>Total Requests</h4>
-        <div class="bignum">160479</div>
-        <div class="bignum"></div>
-      </div>
-      
-        <div class="box  failed ">
-          <i class="far fa-times-circle icon"></i>
-          <h4>Failed Requests</h4>
-          <div class="bignum">49917</div>
-        </div> 
-           
-      <div class="box">
-        <i class="fas fa-chart-bar icon"></i>
-        <h4>Ok Responses</h4>
-        <div class="bignum">110562</div>
-      </div>
-      <div class="box  failed ">
-        <i class="fas fa-eye icon"></i>
-        <h4>Failed Checks</h4>
-        <div class="bignum">55540</div>
-      </div>
- <div class="box">
+  <!--First Row-->
+<div class="row">
+<div class="box">
+<i class="fas fa-globe icon"></i>
+<h4>Total Requests</h4>
+<div class="bignum">1066
+</div>
+<div class="bignum">
+</div>
+</div>
+
+<div class="box ">
+<i class="far fa-times-circle icon"></i>
+<h4>Failed Requests</h4>
+<div class="bignum">0
+</div>
+</div>
+
+<div class="box">
+<i class="fas fa-chart-bar icon"></i>
+<h4>2xx Responses</h4>
+<div class="bignum">1066
+</div>
+</div>
+<div class="box">
 <i class="fas fa-percentage icon"></i>
 <h4>Success Rate</h4>
-<div class="bignum">
-
-
-69%
-
+<div class="bignum">100%
 </div>
-</div>    </div>
+</div>
+</div>
 
-    <br>
+  <!-- first row end --> <!--Second Row-->
+<div class="row">
+<div class="box ">
+<i class="fas fa-chart-bar icon"></i>
+<h4>Breached Thresholds</h4>
+<div class="bignum">0</div>
+</div>
+<div class="box ">
+<i class="fas fa-eye icon"></i>
+<h4>Failed Checks</h4>
+<div class="bignum">0</div>
+</div>
+<div class="box">
+<i class="fas fa-chart-bar icon"></i>
+<h4>Peak RPM</h4>
+<div class="bignum">
+</div>
+</div>
+<div class="box ">
+<i class="fas fa-chart-bar icon"></i>
+<h4>Users Capacity</h4>
+<div class="bignum">
+</div>
+</div>
+</div>
+
+ <!-- second row end --> <br>
     
     <div class="tabs">
       <input type="radio" name="tabs" id="tabone" checked="checked">
@@ -211,27 +235,27 @@
                 
                 
                 
-                  <td class="">2862.44</td>
+                  <td class="">153.59</td>
                 
 
                 
-                  <td class="">60016.80</td>
+                  <td class="">487.97</td>
                   
 
                 
-                  <td class="">2333.06</td>
+                  <td class="">142.71</td>
                   
                 
                 
-                  <td>-</td>
+                  <td class="">111.07</td>
                    
                               
                 
-                  <td class="">4085.72</td>
+                  <td class="">199.48</td>
                 
 
                 
-                  <td class="good">4684.08</td>
+                  <td class="good">226.29</td>
                 
               </tr>
             
@@ -247,27 +271,27 @@
                 
                 
                 
-                  <td class="">2834.32</td>
+                  <td class="">153.05</td>
                 
 
                 
-                  <td class="">60016.80</td>
+                  <td class="">487.97</td>
                   
 
                 
-                  <td class="">2331.59</td>
+                  <td class="">142.10</td>
                   
                 
                 
-                  <td>-</td>
+                  <td class="">110.45</td>
                    
                               
                 
-                  <td class="">4078.09</td>
+                  <td class="">198.63</td>
                 
 
                 
-                  <td class="">4667.42</td>
+                  <td class="">226.10</td>
                 
               </tr>
             
@@ -283,11 +307,11 @@
                 
                 
                 
-                  <td class="">156.64</td>
+                  <td class="">1.08</td>
                 
 
                 
-                  <td class="">16420.17</td>
+                  <td class="">427.49</td>
                   
 
                 
@@ -319,11 +343,11 @@
                 
                 
                 
-                  <td class="">33.94</td>
+                  <td class="">1.85</td>
                 
 
                 
-                  <td class="">41568.92</td>
+                  <td class="">176.61</td>
                   
 
                 
@@ -355,11 +379,11 @@
                 
                 
                 
-                  <td class="">27.19</td>
+                  <td class="">0.02</td>
                 
 
                 
-                  <td class="">59374.80</td>
+                  <td class="">0.98</td>
                   
 
                 
@@ -375,7 +399,7 @@
                 
 
                 
-                  <td>-</td> 
+                  <td class="">0.08</td>
                 
               </tr>
             
@@ -391,15 +415,15 @@
                 
                 
                 
-                  <td class="">0.92</td>
+                  <td class="">0.52</td>
                 
 
                 
-                  <td class="">56966.74</td>
+                  <td class="">11.14</td>
                   
 
                 
-                  <td>-</td>
+                  <td class="">0.24</td>
                   
                 
                 
@@ -407,11 +431,11 @@
                    
                               
                 
-                  <td class="">0.89</td>
+                  <td class="">1.09</td>
                 
 
                 
-                  <td class="">1.06</td>
+                  <td class="">2.00</td>
                 
               </tr>
             
@@ -427,11 +451,11 @@
                 
                 
                 
-                  <td class="">174.51</td>
+                  <td class="">2.94</td>
                 
 
                 
-                  <td class="">53861.71</td>
+                  <td class="">570.93</td>
                   
 
                 
@@ -463,27 +487,27 @@
                 
                 
                 
-                  <td class="">7256.97</td>
+                  <td class="">156.84</td>
                 
 
                 
-                  <td class="">60066.92</td>
+                  <td class="">722.23</td>
                   
 
                 
-                  <td class="">2992.47</td>
+                  <td class="">143.12</td>
                   
                 
                 
-                  <td class="">1.00</td>
+                  <td class="">111.07</td>
                    
                               
                 
-                  <td class="">21046.29</td>
+                  <td class="">202.88</td>
                 
 
                 
-                  <td class="">21058.12</td>
+                  <td class="">240.34</td>
                 
               </tr>
             
@@ -492,133 +516,6 @@
         <br>
 
         
-           <h2>Custom Metrics</h2> 
-          <table class="pure-table pure-table-striped">
-            <tbody>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Count</th>
-                  <th>Rate</th>
-                  <th>Average</th>
-                  <th>Maximum</th>
-                  <th>Median</th> 
-                  <th>Minimum</th>
-                  <th>90th Percentile</th>
-                  <th>95th Percentile</th>
-                </tr>
-              </thead>
-              
-              <tr>
-                <td><b>other_errors</b></td>
-
-                
-                  <td class="">4.00</td>
-                
-
-                
-                  <td class="">0.00</td>
-                
-                
-                
-                  <td>-</td>
-                
-
-                
-                  <td>-</td>
-                  
-
-                
-                  <td>-</td>
-                  
-                
-                
-                  <td>-</td>
-                   
-                              
-                
-                  <td>-</td>
-                
-
-                
-                  <td>-</td> 
-                
-              </tr>
-              
-          
-              <tr>
-                <td><b>tcp_errors</b></td>
-
-                
-                  <td class="">31719.00</td>
-                
-
-                
-                  <td class="">34.48</td>
-                
-                
-                
-                  <td>-</td>
-                
-
-                
-                  <td>-</td>
-                  
-
-                
-                  <td>-</td>
-                  
-                
-                
-                  <td>-</td>
-                   
-                              
-                
-                  <td>-</td>
-                
-
-                
-                  <td>-</td> 
-                
-              </tr>
-              
-          
-              <tr>
-                <td><b>timeout_errors</b></td>
-
-                
-                  <td class="">2261.00</td>
-                
-
-                
-                  <td class="">2.46</td>
-                
-                
-                
-                  <td>-</td>
-                
-
-                
-                  <td>-</td>
-                  
-
-                
-                  <td>-</td>
-                  
-                
-                
-                  <td>-</td>
-                   
-                              
-                
-                  <td>-</td>
-                
-
-                
-                  <td>-</td> 
-                
-              </tr>
-              
             </tbody>
           </table>
           <br>
@@ -636,8 +533,8 @@
             <div class="box metricbox">
               <h4>Checks</h4>
               <i class="fas fa-eye icon"></i>
-              <div class="row"><div>Passed</div><div>265418</div></div>
-              <div class="row"><div>Failed</div><div>55540</div></div>
+              <div class="row"><div>Passed</div><div>2132</div></div>
+              <div class="row"><div>Failed</div><div>0</div></div>
             </div>
           
 
@@ -645,16 +542,16 @@
             <div class="box metricbox">
               <h4>Iterations</h4>
               <i class="fas fa-redo icon"></i>
-              <div class="row"><div>Total</div><div>160479</div></div>
-              <div class="row"><div>Rate</div><div>174.44/s</div></div>
+              <div class="row"><div>Total</div><div>1066</div></div>
+              <div class="row"><div>Rate</div><div>32.23/s</div></div>
             </div>
           
 
           <div class="box metricbox">
             <h4>Virtual Users</h4>
             <i class="fas fa-user icon"></i>
-            <div class="row"><div>Min</div><div>2</div></div>
-            <div class="row"><div>Max</div><div>1500</div></div>
+            <div class="row"><div>Min</div><div>1</div></div>
+            <div class="row"><div>Max</div><div>9</div></div>
           </div>
         </div>
 
@@ -662,22 +559,22 @@
           <div class="box metricbox">
             <h4>Requests</h4>
             <i class="fas fa-globe icon"></i>
-            <div class="row"><div>Total</div><div>160479</div></div>
-            <div class="row"><div>Rate</div><div>174.44/s</div></div>
+            <div class="row"><div>Total</div><div>1066</div></div>
+            <div class="row"><div>Rate</div><div>32.23/s</div></div>
           </div>
 
           <div class="box metricbox">
             <h4>Data Received</h4>
             <i class="fas fa-cloud-download-alt icon"></i>
-            <div class="row"><div>Total</div><div>75.82 MB</div></div>
-            <div class="row"><div>Rate</div><div>0.08 mB/s</div></div>
+            <div class="row"><div>Total</div><div>0.55 MB</div></div>
+            <div class="row"><div>Rate</div><div>0.02 mB/s</div></div>
           </div>
 
           <div class="box metricbox">
             <h4>Data Sent</h4>
             <i class="fas fa-cloud-upload-alt icon"></i>
-            <div class="row"><div>Total</div><div>19.50 MB</div></div>
-            <div class="row"><div>Rate</div><div>0.02 mB/s</div></div>
+            <div class="row"><div>Total</div><div>0.17 MB</div></div>
+            <div class="row"><div>Rate</div><div>0.01 mB/s</div></div>
           </div>   
         </div>
       </div>  
@@ -699,12 +596,12 @@
             </tr>
           </thead>
           
-            <tr class="checkDetails failed">
-              <td width="50%">status is 200</td><td>110562</td><td>49917</td>
+            <tr class="checkDetails ">
+              <td width="50%">status is 200</td><td>1066</td><td>0</td>
             </tr>
           
-            <tr class="checkDetails failed">
-              <td width="50%">response time is less than 5s</td><td>154856</td><td>5623</td>
+            <tr class="checkDetails ">
+              <td width="50%">response time is less than 5s</td><td>1066</td><td>0</td>
             </tr>
           
         </table>     

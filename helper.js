@@ -18,27 +18,21 @@ export const usersCapacityCalPhases = (scenario) => {
 
   let totalPhasesDurationInMinutes = totalPhasesDuration / 60;
 
-  console.log("USERs CAPACITY CALCs CONFIGs:");
-
-  if (isConfigured) {
-    phases.forEach((phase, index) => {
-      console.log(
-        `Phase ${index + 1} starts at ${phase.phaseStart} seconds and ends at ${
-          phase.phaseEnd
-        } seconds with a target of ${phase.phaseTarget} VUs`
-      );
-    });
-    console.log(
-      `Total duration of users capacity phases is: ${totalPhasesDurationInMinutes} minutes`
-    );
-  } else {
-    console.log(
-      "This scenario is not configured for user capacity calculation."
-    );
-  }
-
   return { phases, isConfigured, totalPhasesDurationInMinutes };
 };
+
+export const logUsersCapacityPhases = (usersCapacityPhases) => {
+    console.log("USERs CAPACITY CALCs CONFIGs:");
+  
+    if (usersCapacityPhases.isConfigured) {
+      usersCapacityPhases.phases.forEach((phase, index) => {
+        console.log(`Phase ${index + 1} starts at ${phase.phaseStart} seconds and ends at ${phase.phaseEnd} seconds with a target of ${phase.phaseTarget} VUs`);
+      });
+      console.log(`Total duration of users capacity phases is: ${usersCapacityPhases.totalPhasesDurationInMinutes} minutes`);
+    } else {
+      console.log("This scenario is not configured for user capacity calculation.");
+    }
+  };
 
 const parseDuration = (duration) => {
   let time = parseInt(duration.slice(0, -1));
@@ -54,3 +48,16 @@ const parseDuration = (duration) => {
       return 0;
   }
 };
+
+function arraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  

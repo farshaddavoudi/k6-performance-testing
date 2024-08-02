@@ -2,22 +2,28 @@ import http from "k6/http";
 import { check, sleep } from "k6";
 import { Counter } from "k6/metrics";
 import { htmlReport } from "./HtmlReporter.js";
-import { usersCapacityCalPhases } from "./helper.js";
-import {
-  scenario_1min,
-  scenario_15min,
-  scenario_36min,
-  scenario_65min,
-} from "./test-scenarios.js";
+import { usersCapacityCalPhases, logUsersCapacityPhases } from "./helper.js";
+import * as urls from "./test-urls.js";
+import * as scenarios from "./test-scenarios.js";
 
+// ####################### TEST SETTINGS ###########################
+
+// ## URL under test. URLs can be found and modified in `./test-urls.js` file
+const targetUrl = urls.url1;
+// ## Scenario (staging) for the test. Scenarios can be found and modified in `./test-scenarios.js` file
+let targetScenario = scenarios.scenario_1min;
 // ## Max acceptable response time - otherwise the check fails for the request
 const responseTimeThreshold = 5;
-// ## Real users average requests per minutes in the app
+// ## Real users average requests per minutes in your app
 const realUsersRPM = 3;
-// ## Scenario (staging) for the test. Scenarios can be found and modified in `./test-scenarios.js` file
-let activeTestScenario = scenario_15min;
+// ## Set to true if you want to show the CLI result as well
+const showCliResult = false;
+// ## The generated HTML report page title. Things you want to remember in case of saving it and try to see it later
+const htmlReportTitle = "Server x - 16 Replicas - Internal Net - 2000 VUs";
 
-const usersCapacityPhases = usersCapacityCalPhases(activeTestScenario);
+// #################### END OF TEST SETTINGS ########################
+
+const usersCapacityPhases = usersCapacityCalPhases(targetScenario);
 
 let counterOkResponses = new Counter("ok_responses");
 let counter429 = new Counter("http_429_errors");
@@ -32,7 +38,9 @@ let counterTlsErrors = new Counter("tls_errors");
 let counterHttp5xxErrors = new Counter("http5xx_errors");
 let counterOtherErrors = new Counter("other_errors");
 
-const counterUsersCapacityPhaseSuccesses = new Counter("users_capacity_phases_successes");
+const counterUsersCapacityPhaseSuccesses = new Counter(
+  "users_capacity_phases_successes"
+);
 
 export let options = {
   insecureSkipTLSVerify: false,
@@ -40,8 +48,7 @@ export let options = {
   //vus: 2000, //virtual users no
   //duration: "60s", //how long tests to be run
 
-  // CHANGE THIS
-  stages: activeTestScenario,
+  stages: targetScenario,
 
   thresholds: {
     http_req_duration: [`p(95)<${responseTimeThreshold * 1000}`],
@@ -51,15 +58,7 @@ export let options = {
 const testStartTime = Date.now();
 
 export default function () {
-  const url1 = "https://example1.com/api/get";
-  const url2 = "https://example2.com/api/get";
-  const url3 = "https://example3.com/api/get";
-  const url4 = "https://example4.com/api/get";
-
-  // CHANGE THIS
-  const url = url1;
-
-  let res = http.get(url);
+  let res = http.get(targetUrl);
 
   // Calculate the elapsed time in seconds since the test started
   const elapsedTime = (Date.now() - testStartTime) / 1000;
@@ -67,7 +66,9 @@ export default function () {
   let isUserCapacityCalculationPhase = false;
 
   if (usersCapacityPhases.isConfigured) {
-    isUserCapacityCalculationPhase = usersCapacityPhases.phases.some(phase => elapsedTime >= phase.phaseStart && elapsedTime < phase.phaseEnd);
+    isUserCapacityCalculationPhase = usersCapacityPhases.phases.some(
+      (phase) => elapsedTime >= phase.phaseStart && elapsedTime < phase.phaseEnd
+    );
   }
 
   let checkSuccess = check(res, {
@@ -118,12 +119,19 @@ export default function () {
 }
 
 export function handleSummary(data) {
-  if (usersCapacityPhases.isConfigured) {
-    let usersCapacityPhasesRequests = data.metrics.users_capacity_phases_successes.values.count;
 
-    let usersCapacityPhasesTestDurationMinutes = usersCapacityPhases.totalPhasesDurationInMinutes; 
-    
-    const peakRPM = Math.round(usersCapacityPhasesRequests / usersCapacityPhasesTestDurationMinutes);
+  logUsersCapacityPhases(usersCapacityPhases);
+
+  if (usersCapacityPhases.isConfigured) {
+    let usersCapacityPhasesRequests =
+      data.metrics.users_capacity_phases_successes.values.count;
+
+    let usersCapacityPhasesTestDurationMinutes =
+      usersCapacityPhases.totalPhasesDurationInMinutes;
+
+    const peakRPM = Math.round(
+      usersCapacityPhasesRequests / usersCapacityPhasesTestDurationMinutes
+    );
 
     data.metrics.peak_rpm = {
       type: "counter",
@@ -144,13 +152,16 @@ export function handleSummary(data) {
     };
   }
 
-  //console.log(data);
-
-  return {
-    //'summary.json': JSON.stringify(data),
-    "result.html": htmlReport(data),
-    //stdout: textSummary(data, { indent: " ", enableColors: true }),
-  };
+  if (showCliResult) {
+    return {
+      "result.html": htmlReport(data, { title: htmlReportTitle, debug: false }),
+      stdout: textSummary(data, { indent: " ", enableColors: true }),
+    };
+  } else {
+    return {
+      "result.html": htmlReport(data,  { title: htmlReportTitle, debug: false }),
+    };
+  }
 }
 
 function errorHandlerAndLogger(res, tags = {}) {
@@ -180,16 +191,4 @@ function errorHandlerAndLogger(res, tags = {}) {
   } else {
     console.log(errorData);
   }
-}
-
-function arraysEqual(arr1, arr2) {
-  if (arr1.length !== arr2.length) {
-    return false;
-  }
-  for (let i = 0; i < arr1.length; i++) {
-    if (arr1[i] !== arr2[i]) {
-      return false;
-    }
-  }
-  return true;
 }
