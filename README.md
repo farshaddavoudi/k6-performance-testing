@@ -126,7 +126,7 @@ The top eight boxes in the test results are crucial for analysis:
 - **Breached Thresholds**: Are the test has passed the criteria has been defined or not? If not, it is bad :(
 - **Failed Checks**: Invalidated HTTP responses by some checks, can be *status code check* and/or *response time check*, etc.
 - **Peak RPM**: The total healthy requests in the peak phase (we define it in our scenario by setting `usersCapacityCalcRef: true` flag).
-- **Users Capacity**: It's very important criteria. Generally speaking, every team member loves to know how many users can work simultaneously in the application!
+- **Users Capacity**: It's very important criteria. Generally speaking, every team member (specially managers) love to know how many users can work simultaneously in the application!
 
 
 ### 4. Estimating Real-World User Capacity
