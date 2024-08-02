@@ -3,7 +3,7 @@ import { check, sleep } from "k6";
 import { Counter } from "k6/metrics";
 import { htmlReport } from "./HtmlReporter.js";
 
-const maxAcceptableResponseTime = 10; //Seconds
+const maxAcceptableResponseTime = 5; //Seconds
 const realUserRPM = 3;
 
 let counterOkResponses = new Counter("ok_responses");
