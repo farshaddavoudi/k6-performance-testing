@@ -2,9 +2,22 @@ import http from "k6/http";
 import { check, sleep } from "k6";
 import { Counter } from "k6/metrics";
 import { htmlReport } from "./HtmlReporter.js";
+import { usersCapacityCalPhases } from "./helper.js";
+import {
+  scenario_1min,
+  scenario_15min,
+  scenario_36min,
+  scenario_65min,
+} from "./test-scenarios.js";
 
-const maxAcceptableResponseTime = 5; //Seconds
-const realUserRPM = 3;
+// ## Max acceptable response time - otherwise the check fails for the request
+const responseTimeThreshold = 5;
+// ## Real users average requests per minutes in the app
+const realUsersRPM = 3;
+// ## Scenario (staging) for the test. Scenarios can be found and modified in `./test-scenarios.js` file
+let activeTestScenario = scenario_15min;
+
+const usersCapacityPhases = usersCapacityCalPhases(activeTestScenario);
 
 let counterOkResponses = new Counter("ok_responses");
 let counter429 = new Counter("http_429_errors");
@@ -19,65 +32,7 @@ let counterTlsErrors = new Counter("tls_errors");
 let counterHttp5xxErrors = new Counter("http5xx_errors");
 let counterOtherErrors = new Counter("other_errors");
 
-const counterStressLoadSuccesses = new Counter("stress_load_successes");
-
-let testScenario1Min = [
-  // Unreliable scenario. Just for quick test
-  { duration: "30s", target: 100 },
-  { duration: "3s", target: 0 },
-];
-
-let testScenario15Min = [
-  // DON'T CHANGE THE SCENARIO AND TIMES. ONLY TARGETS
-  { duration: "30s", target: 100 }, // warm-up (below normal load)
-  { duration: `10s`, target: 100 },
-  { duration: "20s", target: 500 }, // normal load
-  { duration: "20s", target: 500 },
-  { duration: "50s", target: 1000 },
-  { duration: "20s", target: 1300 }, // high load (below the breaking point)
-  { duration: "90s", target: 2000 },
-  { duration: "10m", target: 2000 }, // Stress load (around the breaking point)
-  { duration: "60s", target: 0 }, // scale down (recovery stage)
-];
-
-let testScenario36Min = [
-  // DON'T CHANGE THE SCENARIO AND TIMES. ONLY TARGETS
-  { duration: "2m", target: 100 }, // Warm-up
-  { duration: "2m", target: 500 }, // Increase to normal load
-  { duration: "2m", target: 1000 }, // Increase to high load
-  { duration: "2m", target: 1500 }, // Gradual increase
-  { duration: "2m", target: 2000 }, // Gradual increase to peak load
-  { duration: "20m", target: 2000 }, // Steady-state peak load (Stress Load)
-  { duration: "2m", target: 1000 }, // Gradual decrease
-  { duration: "2m", target: 500 }, // Decrease to normal load
-  { duration: "2m", target: 0 }, // Cool-down and recovery
-];
-
-let stressTestUltimate = [
-  { duration: "2m", target: 100 }, // Warm-up
-  { duration: "5m", target: 100 }, // Steady-state below normal load
-
-  { duration: "2m", target: 500 }, // Increase to normal load
-  { duration: "5m", target: 500 }, // Steady-state normal load
-
-  { duration: "2m", target: 1000 }, // Increase to high load
-  { duration: "10m", target: 1000 }, // Steady-state high load
-
-  { duration: "2m", target: 1500 }, // Gradual increase
-  { duration: "10m", target: 1500 }, // Steady-state
-
-  { duration: "2m", target: 2000 }, // Peak load
-  { duration: "20m", target: 2000 }, // Steady-state peak load
-
-  { duration: "5m", target: 0 }, // Cool-down and recovery
-];
-
-// ################################### CHANGE THIS ############################
-let testScenarioActive = testScenario15Min;
-
-const testScenarioConfiguredToCalculateRealUsersCapacity =
-  arraysEqual(testScenarioActive, testScenario36Min) ||
-  arraysEqual(testScenarioActive, testScenario15Min);
+const counterUsersCapacityPhaseSuccesses = new Counter("users_capacity_phases_successes");
 
 export let options = {
   insecureSkipTLSVerify: false,
@@ -86,10 +41,10 @@ export let options = {
   //duration: "60s", //how long tests to be run
 
   // CHANGE THIS
-  stages: testScenarioActive,
+  stages: activeTestScenario,
 
   thresholds: {
-    http_req_duration: [`p(95)<${maxAcceptableResponseTime * 1000}`],
+    http_req_duration: [`p(95)<${responseTimeThreshold * 1000}`],
   },
 };
 
@@ -109,25 +64,21 @@ export default function () {
   // Calculate the elapsed time in seconds since the test started
   const elapsedTime = (Date.now() - testStartTime) / 1000;
 
-  let isStressLoadPhase = false;
+  let isUserCapacityCalculationPhase = false;
 
-  if (testScenarioConfiguredToCalculateRealUsersCapacity) {
-    if (testScenario36Min) {
-      isStressLoadPhase = elapsedTime >= 10 * 60 && elapsedTime < 30 * 60; // 10-30 minute window
-    } else if (testScenario15Min) {
-      isStressLoadPhase = elapsedTime >= 4 * 60 && elapsedTime < 14 * 60; // 4-14 minute window
-    }
+  if (usersCapacityPhases.isConfigured) {
+    isUserCapacityCalculationPhase = usersCapacityPhases.phases.some(phase => elapsedTime >= phase.phaseStart && elapsedTime < phase.phaseEnd);
   }
 
   let checkSuccess = check(res, {
     "status is 200": (r) => r.status === 200,
-    [`response time is less than ${maxAcceptableResponseTime}s`]: (r) =>
-      r.timings.duration < maxAcceptableResponseTime * 1000,
+    [`response time is less than ${responseTimeThreshold}s`]: (r) =>
+      r.timings.duration < responseTimeThreshold * 1000,
   });
 
   // Increment the custom counter for successful responses during stress load
-  if (checkSuccess && isStressLoadPhase) {
-    counterStressLoadSuccesses.add(1);
+  if (checkSuccess && isUserCapacityCalculationPhase) {
+    counterUsersCapacityPhaseSuccesses.add(1);
   }
 
   if (res.status === 200) {
@@ -167,16 +118,12 @@ export default function () {
 }
 
 export function handleSummary(data) {
-  if (testScenarioConfiguredToCalculateRealUsersCapacity) {
-    let stressLoadRequests = data.metrics.stress_load_successes.values.count;
-    let testDurationMinutes; // Duration of the stress load phase in minutes
-    if (arraysEqual(testScenarioActive, testScenario15Min)) {
-      testDurationMinutes = 10;
-    } else if (arraysEqual(testScenarioActive, testScenario36Min)) {
-      testDurationMinutes = 20;
-    }
+  if (usersCapacityPhases.isConfigured) {
+    let usersCapacityPhasesRequests = data.metrics.users_capacity_phases_successes.values.count;
 
-    const peakRPM = Math.round(stressLoadRequests / testDurationMinutes);
+    let usersCapacityPhasesTestDurationMinutes = usersCapacityPhases.totalPhasesDurationInMinutes; 
+    
+    const peakRPM = Math.round(usersCapacityPhasesRequests / usersCapacityPhasesTestDurationMinutes);
 
     data.metrics.peak_rpm = {
       type: "counter",
@@ -186,7 +133,7 @@ export function handleSummary(data) {
       },
     };
 
-    const usersCapacity = Math.round(peakRPM / realUserRPM);
+    const usersCapacity = Math.round(peakRPM / realUsersRPM);
 
     data.metrics.real_users_capacity = {
       type: "counter",
