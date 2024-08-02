@@ -4,6 +4,20 @@
 
 <img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/summary.png" alt="k6 Performance Testing Summary">
 
+## How To Use
+
+### 1. k6 should be installed
+
+### 2. Clone the project. Preferrably open it with VS Code
+
+### 3. Config your Test Scenario in the `test-scenarios.js` file
+
+### 4. Config your HTTP Request in the `test-http-requests.js` file
+
+### 5. Modify main script `test.js` only in SETTINGS block section.
+
+### 6. Run the test: `k6 run test.js`
+
 ## What Am I Trying to Achieve Here?
 
 ### 1. Enhanced k6 HTML Reporter
