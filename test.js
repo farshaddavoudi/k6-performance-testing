@@ -3,13 +3,13 @@ import { check, sleep } from "k6";
 import { Counter } from "k6/metrics";
 import { htmlReport } from "./HtmlReporter.js";
 import { usersCapacityCalPhases, logUsersCapacityPhases } from "./helper.js";
-import * as urls from "./test-urls.js";
+import * as httpRequests from "./test-http-requests.js";
 import * as scenarios from "./test-scenarios.js";
 
 // ####################### TEST SETTINGS ###########################
 
-// ## URL under test. URLs can be found and modified in `./test-urls.js` file
-const targetUrl = urls.url1;
+// ## HTTP request to call. HTTP requests can be found and modified in `./test-http-requests.js` file
+const targetHttpEndpoint = httpRequests.testEndpoint;
 // ## Scenario (staging) for the test. Scenarios can be found and modified in `./test-scenarios.js` file
 let targetScenario = scenarios.scenario_1min;
 // ## Max acceptable response time - otherwise the check fails for the request
@@ -58,7 +58,10 @@ export let options = {
 const testStartTime = Date.now();
 
 export default function () {
-  let res = http.get(targetUrl);
+  let responses = http.batch([targetHttpEndpoint]);
+
+  // I test againt one endpoint. You can configure to send batch requests easily. Everything is ready for you, just some tweaks are needed :)
+  let res = responses[0]; 
 
   // Calculate the elapsed time in seconds since the test started
   const elapsedTime = (Date.now() - testStartTime) / 1000;
