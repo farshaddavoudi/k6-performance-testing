@@ -1,7 +1,7 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 import { Counter } from "k6/metrics";
-import { htmlReport } from "./HtmlReporter.js"; // Use local file instead of: import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { htmlReport } from "./HtmlReporter.js";
 
 const maxAcceptableResponseTime = 10; //Seconds
 const realUserRPM = 3;
