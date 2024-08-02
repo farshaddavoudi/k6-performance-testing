@@ -18,7 +18,7 @@ Make sure to run the test command in the same path where the project is cloned. 
 
 ### 3. Configure Your Test Scenario
 
-Edit the test-scenarios.js file to define your test scenarios. You can add load, stress, spike, and soak test scenarios for easy use in the main script.
+Edit the `test-scenarios.js` file to define your test scenarios. You can add load, stress, spike, and soak test scenarios for easy use in the main script.
 
 > 💡 To calculate the real concurrent users capacity of your application (usually the peak phase), flag the phase with `usersCapacityCalcRef: true` as shown below:
 ```js
@@ -34,7 +34,7 @@ export let scenario_15min = [
 
 ### 4. Configure Your HTTP Requests
 
-Edit the test-http-requests.js file to define your HTTP GET or POST or Put or Delete requests as objects with the appropriate URL, body, and headers. This allows for easy reuse of these requests.
+Edit the `test-http-requests.js` file to define your HTTP GET or POST or Put or Delete requests as objects with the appropriate URL, body, and headers. This allows for easy reuse of these requests.
 
 ```js
 const url1 = "https://httpbin.test.k6.io/get";
@@ -117,13 +117,17 @@ To better understand `status_code=0` errors, especially during stress and spike 
 
 ### 3. Improved Test Result Analysis
 
-The top five boxes in the test results are crucial for analysis:
+The top eight boxes in the test results are crucial for analysis:
 
 - **Total Requests**: Total number of requests sent to the server.
 - **Failed Requests**: Number of failed HTTP requests, including timeouts, connection errors, and non-2xx status codes.
-- **OK Responses**: Requests with a 200 status code response. This is a basic success metric.
-- **Failed Checks**: Invalidated HTTP responses by some checks, can be not a success code and/or long response time, etc.
+- **2xx Responses**: Requests with a 2xx status code response. This is a basic success metric.
 - **Success Rate**: Percentage of requests resulting in 2xx status codes.
+- **Breached Thresholds**: Are the test has passed the criteria has been defined or not? If not, it is bad :(
+- **Failed Checks**: Invalidated HTTP responses by some checks, can be *status code check* and/or *response time check*, etc.
+- **Peak RPM**: The total healthy requests in the peak phase (we define it in our scenario by setting `usersCapacityCalcRef: true` flag).
+- **Users Capacity**: It's very important criteria. Generally speaking, every team member loves to know how many users can work simultaneously in the application!
+
 
 ### 4. Estimating Real-World User Capacity
 
@@ -139,16 +143,11 @@ Converting Virtual Users (VUs) to real-world users involves several steps:
     ```
     > 💡 This threshold means 95% of requests must complete within the acceptable response time.
 
-2. **Specify the RPM (requests per minute) of real-world users.** For example, if a user makes 10 requests in 5 minutes, that's 2 RPM.
-    <img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/real-user-rpm.png" alt="Real User RPM">
+2. **Specify the RPM (requests per minute) of real-world users.** For example, if a user makes 10 requests in 5 minutes, that's 2 RPM. It's different for each application. Set it in *TEST SETTINGS* section of main script.
 
-3. **Run the test in a real scenario.** Tests should be long enough (at least 40 minutes) to gather meaningful data.
-    > 💡 Focus on the peak phase to determine the maximum concurrent users the application can handle.
-    <img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/tag-stress-load-phase.png" alt="Stress Load Phase">
-
-    At the end, display the results:
-    <img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/show-real-users-in-summary.png" alt="Real Users in Summary">
-
+3. **Run the test in a real scenario.** Tests should be long enough (at least 40 minutes) to gather meaningful data. Truth to be told, I do most of my tests in a 15 minutes scenario, but final tests should be in longer duration mimik a more natual pressure flow and behaviour. 
+    > 💡 Focus on the peak phase to determine the maximum concurrent users the application can handle. We don't want to consider phases that are warm up and the load pressure is not as high as the system under test can gracefully handle.
+  
 ### 5. Implementing a Graceful Rate Limit
 
 Setting a rate limit ensures that the system remains stable under load, preventing overwhelming the server and drastically increasing response times. This involves limiting both individual user calls and total concurrent users.
