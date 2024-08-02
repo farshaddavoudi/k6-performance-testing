@@ -5,9 +5,19 @@ const url1 = "https://httpbin.test.k6.io/get";
 const url2 = "https://test.k6.io";
 const url3 = "https://httpbin.test.k6.io/post";
 
-export const testEndpoint = {
+export const testEndpoint1 = {
   method: "GET",
   url: url1,
+};
+
+export const testEndpoint2 = {
+  method: "GET",
+  url: url2,
+};
+
+export const testEndpoint3 = {
+  method: "GET",
+  url: url3,
 };
 
 export const req2Example = {

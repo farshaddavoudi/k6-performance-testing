@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/farshaddavoudi/Blazor.PersianDatePicker/master/LICENSE)
 
-<img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/summary.png" alt="k6 Performance Testing Summary">
+<img src="https://github.com/farshaddavoudi/k6-performance-testing/blob/main/screenshots/k6-reporter.png" alt="k6 Performance Testing Summary">
 
 ## How To Use
 
@@ -10,13 +10,90 @@
 
 ### 2. Clone the project. Preferrably open it with VS Code
 
+The test command should be run in the same path. Also the report will generate at the same path.
+
 ### 3. Config your Test Scenario in the `test-scenarios.js` file
+
+You can put load, stress, spike and soak tests scenario here and use them easily in the main script. 
+
+> 💡 If you want a phase to be calculated for real concurrent users capacity of your application (which is usually the peak phase), you can flag it with `usersCapacityCalcRef: true` as below:
+
+```js
+export let scenario_15min = [
+  { duration: "30s", target: 100 }, // warm-up (below normal load)
+  { duration: "20s", target: 500 }, // normal load
+  { duration: "3m", target: 1300 }, // high load (below the breaking point)
+  { duration: "3m", target: 2000 }, // increase toward app limit
+  { duration: "10m", target: 2000, usersCapacityCalcRef: true }, // Stress load (around the breaking point)
+  { duration: "60s", target: 0 }, // scale down (recovery stage)
+];
+```
 
 ### 4. Config your HTTP Request in the `test-http-requests.js` file
 
+Configur your Get or Post HTTP requests as objects with proper URL, body and headers if needed so repetitive use of those requests will be easy.
+
+```js
+const url1 = "https://httpbin.test.k6.io/get";
+const url2 = "https://test.k6.io";
+const url3 = "https://httpbin.test.k6.io/post";
+
+export const testEndpoint1 = {
+  method: "GET",
+  url: url1,
+};
+
+export const testEndpoint2 = {
+  method: "GET",
+  url: url2,
+};
+
+export const testEndpoint3 = {
+  method: "GET",
+  url: url3,
+};
+```
+
 ### 5. Modify main script `test.js` only in SETTINGS block section.
 
+```js
+import http from "k6/http";
+import { check, sleep } from "k6";
+import { Counter } from "k6/metrics";
+import { htmlReport } from "./HtmlReporter.js";
+import { usersCapacityCalPhases, logUsersCapacityPhases } from "./helper.js";
+import * as httpRequests from "./test-http-requests.js";
+import * as scenarios from "./test-scenarios.js";
+
+// ####################### TEST SETTINGS ###########################
+
+// ## HTTP request to call. HTTP requests can be found and modified in `./test-http-requests.js` file
+const targetHttpEndpoint = httpRequests.testEndpoint;
+// ## Scenario (staging) for the test. Scenarios can be found and modified in `./test-scenarios.js` file
+let targetScenario = scenarios.scenario_1min;
+// ## Max acceptable response time - otherwise the check fails for the request
+const responseTimeThreshold = 5;
+// ## Real users average requests per minutes in your app
+const realUsersRPM = 3;
+// ## Set to true if you want to show the CLI result as well
+const showCliResult = false;
+// ## The generated HTML report page title. Things you want to remember in case of saving it and try to see it later
+const htmlReportTitle = "Server x - 16 Replicas - Internal Net - 2000 VUs";
+
+// #################### END OF TEST SETTINGS ########################
+
+const usersCapacityPhases = usersCapacityCalPhases(targetScenario);
+
+// rest of script
+```
+
 ### 6. Run the test: `k6 run test.js`
+
+The result will be saved in the same folder. Can be saved anywhere for future reference as it's simple html page.
+
+### 7. Next Runs
+
+You defined all your possible scenarios in `test-scenarios.js` file and all HTTP requests in the `test-http-requests.js` file. So for following tests, only need to modify the *TEST SETTINGS* section and run the test.
 
 ## What Am I Trying to Achieve Here?
 
