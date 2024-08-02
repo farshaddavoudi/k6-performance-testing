@@ -6,32 +6,35 @@
 
 ## How To Use
 
-### 1. k6 should be installed
+### 1. Install k6
 
-### 2. Clone the project. Preferrably open it with VS Code
+Ensure k6 is installed on your system.
 
-The test command should be run in the same path. Also the report will generate at the same path.
+### 2. Clone the Project
 
-### 3. Config your Test Scenario in the `test-scenarios.js` file
+Clone the repository and preferably open it with VS Code.
 
-You can put load, stress, spike and soak tests scenario here and use them easily in the main script. 
+Make sure to run the test command in the same path where the project is cloned. The report will also be generated in this path.
 
-> 💡 If you want a phase to be calculated for real concurrent users capacity of your application (which is usually the peak phase), you can flag it with `usersCapacityCalcRef: true` as below:
+### 3. Configure Your Test Scenario
 
+Edit the test-scenarios.js file to define your test scenarios. You can add load, stress, spike, and soak test scenarios for easy use in the main script.
+
+> 💡 To calculate the real concurrent users capacity of your application (usually the peak phase), flag the phase with `usersCapacityCalcRef: true` as shown below:
 ```js
 export let scenario_15min = [
-  { duration: "30s", target: 100 }, // warm-up (below normal load)
-  { duration: "20s", target: 500 }, // normal load
-  { duration: "3m", target: 1300 }, // high load (below the breaking point)
-  { duration: "3m", target: 2000 }, // increase toward app limit
-  { duration: "10m", target: 2000, usersCapacityCalcRef: true }, // Stress load (around the breaking point)
-  { duration: "60s", target: 0 }, // scale down (recovery stage)
+  { duration: "30s", target: 100 }, 
+  { duration: "20s", target: 500 }, 
+  { duration: "3m", target: 1300 }, 
+  { duration: "3m", target: 2000 }, 
+  { duration: "10m", target: 2000, usersCapacityCalcRef: true }, // Set it in peak phase
+  { duration: "60s", target: 0 }, 
 ];
 ```
 
-### 4. Config your HTTP Request in the `test-http-requests.js` file
+### 4. Configure Your HTTP Requests
 
-Configure your Get or Post HTTP requests as objects with proper URL, body and headers if needed so repetitive use of those requests will be easy.
+Edit the test-http-requests.js file to define your HTTP GET or POST or Put or Delete requests as objects with the appropriate URL, body, and headers. This allows for easy reuse of these requests.
 
 ```js
 const url1 = "https://httpbin.test.k6.io/get";
@@ -54,7 +57,9 @@ export const testEndpoint3 = {
 };
 ```
 
-### 5. Modify main script `test.js` only in *TEST SETTINGS* block section.
+### 5. Modify the Main Script
+
+Edit only the *TEST SETTINGS* block in the test.js file.
 
 ```js
 import http from "k6/http";
@@ -87,13 +92,15 @@ const usersCapacityPhases = usersCapacityCalPhases(targetScenario);
 // rest of script
 ```
 
-### 6. Run the test: `k6 run test.js`
+### 6. Run the Test
 
-The result will be saved in the same folder. Can be saved anywhere for future reference as it's simple html page.
+Execute the test with the command: `k6 run test.js`
 
-### 7. Next Runs
+The result will be saved in the same folder and can be accessed as a simple HTML page.
 
-You defined all your possible scenarios in `test-scenarios.js` file and all HTTP requests in the `test-http-requests.js` file. So for following tests, only need to modify the *TEST SETTINGS* section and run the test.
+### 7. Subsequent Runs
+
+For subsequent tests, modify the TEST SETTINGS section only. All scenarios are defined in the `test-scenarios.js` file and all HTTP requests are in the `test-http-requests.js` file. Run the test again as needed.
 
 ## What Am I Trying to Achieve Here?
 
