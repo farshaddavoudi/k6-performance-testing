@@ -13,6 +13,9 @@ export const testEndpoint = {
 export const req2Example = {
   method: "GET",
   url: "https://test.k6.io",
+  params: {
+    headers: { "Authentication": "Bearer asdfasdfasdfasdfasdfasdfasdfasdasdfasdfasdfas....." },
+  },
 };
 
 export const req3Example = {
