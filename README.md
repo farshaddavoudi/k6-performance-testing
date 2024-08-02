@@ -77,7 +77,7 @@ const targetHttpEndpoint = httpRequests.testEndpoint;
 // ## Scenario (staging) for the test. Scenarios can be found and modified in `./test-scenarios.js` file
 let targetScenario = scenarios.scenario_1min;
 // ## Max acceptable response time - otherwise the check fails for the request
-const responseTimeThreshold = 5;
+const responseTimeThreshold = 5; // seconds
 // ## Real users average requests per minutes in your app
 const realUsersRPM = 3;
 // ## Set to true if you want to show the CLI result as well
