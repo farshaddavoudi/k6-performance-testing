@@ -31,7 +31,7 @@ export let scenario_15min = [
 
 ### 4. Config your HTTP Request in the `test-http-requests.js` file
 
-Configur your Get or Post HTTP requests as objects with proper URL, body and headers if needed so repetitive use of those requests will be easy.
+Configure your Get or Post HTTP requests as objects with proper URL, body and headers if needed so repetitive use of those requests will be easy.
 
 ```js
 const url1 = "https://httpbin.test.k6.io/get";
@@ -54,7 +54,7 @@ export const testEndpoint3 = {
 };
 ```
 
-### 5. Modify main script `test.js` only in SETTINGS block section.
+### 5. Modify main script `test.js` only in *TEST SETTINGS* block section.
 
 ```js
 import http from "k6/http";
