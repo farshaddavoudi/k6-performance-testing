@@ -3,7 +3,7 @@
 
 const url1 = "https://httpbin.test.k6.io/get";
 const url2 = "https://test.k6.io";
-const url3 = "https://httpbin.test.k6.io/post";
+const url3 = "https://httpbin.test.k6.io/get";
 
 export const testEndpoint1 = {
   method: "GET",
